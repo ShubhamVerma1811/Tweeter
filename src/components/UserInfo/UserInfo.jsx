@@ -9,19 +9,24 @@ import Avatar from "../Avatar/Avatar";
 import Modal from "../Modal/Modal";
 
 const UserInfo = ({ fetchedUser }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [localFollowers, setLocalFollowers] = useState([]);
-  const [localFollowings, setLocalFollowings] = useState([]);
-  const [isFollowersLoading, setIsFollowersLoading] = useState(true);
-  const [isFollowingsLoading, setIsFollowingsLoading] = useState(true);
   const { user } = useContext(UserContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [connectionDocID, setFollowingDocID] = useState("");
 
-  const { followers, isLoading } = useFollowers(fetchedUser.uid);
-  const { followings } = useFollowings(fetchedUser.uid);
+  const { followers, isFollowersLoading, getFollowers } = useFollowers(
+    fetchedUser.uid
+  );
+  const { followings, isFollowingsLoading, getFollowings } = useFollowings(
+    fetchedUser.uid
+  );
 
   const startFollowing = () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     const { id } = firebase.firestore().collection("connections").add({
       followerID: user.uid,
       followeeID: fetchedUser.uid,
@@ -31,24 +36,16 @@ const UserInfo = ({ fetchedUser }) => {
   };
 
   const stopFollowing = () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     firebase
       .firestore()
       .collection("connections")
       .doc(connectionDocID)
       .delete();
     setIsFollowing(false);
-  };
-
-  const getFollowers = () => {
-    setIsFollowersLoading(isLoading);
-    setLocalFollowers(followers);
-    setIsModalOpen(true);
-  };
-
-  const getFollowings = () => {
-    setIsFollowingsLoading(isLoading);
-    setLocalFollowings(followings);
-    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -68,7 +65,6 @@ const UserInfo = ({ fetchedUser }) => {
 
       checkFollowing();
     }
-    console.log("once");
   }, [fetchedUser, user]);
 
   return (
@@ -76,8 +72,7 @@ const UserInfo = ({ fetchedUser }) => {
       <div className=" mx-auto inline px-4">
         <div
           className="relative rounded-md lg:rounded-xl overflow-hidden bg-white  lg:p-2 h-24 w-24 lg:w-40 lg:h-40"
-          style={{ top: "-20px" }}
-        >
+          style={{ top: "-20px" }}>
           <Avatar src={fetchedUser.profilePicture} />
         </div>
       </div>
@@ -90,17 +85,17 @@ const UserInfo = ({ fetchedUser }) => {
             </p>
             <p
               className="inline mr-2 text-xs font-poppins font-semibold hover:underline cursor-pointer"
-              onClick={() => getFollowers()}
-            >
+              onClick={async () => {
+                await getFollowers();
+                setIsModalOpen(true);
+              }}>
               {fetchedUser.followersCount}
               <span className="m-1 text-gray-500">Followers</span>
             </p>
             <p
               className="inline m-2 text-xs font-poppins font-semibold hover:underline cursor-pointer"
-              onClick={() => getFollowings()}
-            >
+              onClick={() => getFollowings()}>
               {fetchedUser.followingsCount}
-
               <span className="m-1 text-gray-500"> Following</span>
             </p>
           </span>
@@ -108,8 +103,7 @@ const UserInfo = ({ fetchedUser }) => {
             <button
               className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
-              onClick={() => startFollowing()}
-            >
+              onClick={() => startFollowing()}>
               <span className="mx-2">
                 <PersonAddIcon />
               </span>
@@ -119,8 +113,7 @@ const UserInfo = ({ fetchedUser }) => {
             <button
               className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
-              onClick={() => stopFollowing()}
-            >
+              onClick={() => stopFollowing()}>
               <span className="mx-2">
                 <PersonAddIcon />
               </span>
@@ -130,8 +123,7 @@ const UserInfo = ({ fetchedUser }) => {
             <button
               className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
-              onClick={() => startFollowing()}
-            >
+              onClick={() => startFollowing()}>
               <span className="mx-2">
                 <PersonAddIcon />
               </span>
@@ -142,7 +134,7 @@ const UserInfo = ({ fetchedUser }) => {
         <div className="flex justify-center lg:block">
           {fetchedUser.bio ? (
             <p className="font-noto text-xl my-2 text-secondary">
-              Photographer & Filmmaker based in Copenhagen, Denmark
+              {fetchedUser.bio}
             </p>
           ) : (
             <p className="font-noto text-lg my-2 text-secondary">
@@ -151,6 +143,7 @@ const UserInfo = ({ fetchedUser }) => {
           )}
         </div>
       </div>
+
       {isModalOpen && (
         <div
           className="fixed w-4/5 h-full"
@@ -158,22 +151,9 @@ const UserInfo = ({ fetchedUser }) => {
             left: "50%",
             top: "0",
             transform: "translate(-50%, 20%)",
-          }}
-        >
-          {localFollowers ? (
-            // loading prop TODO
-            // handleCLose prop
-            <Modal users={localFollowers} isLoading={isFollowersLoading} />
-          ) : (
-            <div className="flex justify-center">
-              <CircularProgress />
-            </div>
-          )}
-
-          {localFollowings ? (
-            // loading prop TODO
-            // handleCLose prop
-            <Modal users={localFollowings} isLoading={isFollowingsLoading} />
+          }}>
+          {followers ? (
+            <Modal users={followers} close={() => setIsModalOpen(false)} />
           ) : (
             <div className="flex justify-center">
               <CircularProgress />
