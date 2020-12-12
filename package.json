@@ -16,6 +16,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
+    "dotenv": "^8.2.0",
     "firebase": "^8.1.1",
     "next": "10.0.2",
     "react": "17.0.1",
