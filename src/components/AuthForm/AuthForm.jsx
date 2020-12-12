@@ -1,16 +1,14 @@
 import { useState } from "react";
 import {
   handleSignIn,
-  handleSignOut,
-  handleSignUp,
-} from "../../services/Authentication";
 
+  handleSignUp
+} from "../../services/Authentication";
 const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [type, setType] = useState("signIn");
 
   return (
     <div className="w-full">
@@ -18,8 +16,7 @@ const AuthForm = () => {
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="name"
-          >
+            htmlFor="name">
             Name
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -34,8 +31,7 @@ const AuthForm = () => {
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="Email"
-          >
+            htmlFor="Email">
             Email
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -50,8 +46,7 @@ const AuthForm = () => {
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="username"
-          >
+            htmlFor="username">
             Username
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -67,8 +62,7 @@ const AuthForm = () => {
         <div className="mb-6">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
+            htmlFor="password">
             Password
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
@@ -86,8 +80,7 @@ const AuthForm = () => {
               handleSignIn(email, password);
             }}
             className="bg-primary hover:bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-          >
+            type="button">
             Sign In
           </button>
           <button
@@ -95,17 +88,9 @@ const AuthForm = () => {
               handleSignUp(email, password, username, name);
             }}
             className="bg-primary hover:bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-          >
+            type="button">
             Sign Up
           </button>
-
-          <a
-            className="inline-block align-baseline font-bold text-sm text-primary hover:text-primary"
-            href="/"
-          >
-            Forgot Password?
-          </a>
         </div>
       </form>
     </div>
