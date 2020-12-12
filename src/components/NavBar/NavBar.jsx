@@ -2,9 +2,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ExploreIcon from "@material-ui/icons/Explore";
-import GroupIcon from "@material-ui/icons/Group";
 import HomeIcon from "@material-ui/icons/Home";
-import SettingsIcon from "@material-ui/icons/Settings";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
@@ -33,8 +31,7 @@ const NavBar = () => {
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
                 router.route === "/home" ? "text-primary font-semibold" : ""
-              }`}
-            >
+              }`}>
               Home
             </li>
           </Link>
@@ -42,8 +39,7 @@ const NavBar = () => {
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
                 router.route === "/explore" ? "text-primary font-semibold" : ""
-              }`}
-            >
+              }`}>
               Explore
             </li>
           </Link>
@@ -53,8 +49,7 @@ const NavBar = () => {
                 router.route === "/bookmarks"
                   ? "text-primary font-semibold"
                   : ""
-              }`}
-            >
+              }`}>
               Bookmarks
             </li>
           </Link>
@@ -102,8 +97,7 @@ const NavBar = () => {
                 id="options-menu"
                 aria-haspopup="true"
                 aria-expanded="true"
-                onClick={() => setDropdown(!dropdown)}
-              >
+                onClick={() => setDropdown(!dropdown)}>
                 {user && (
                   <span className="w-8 h-8 overflow-hidden rounded-lg">
                     <Avatar src={user.profilePicture} />
@@ -115,8 +109,7 @@ const NavBar = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
-                  aria-hidden="true"
-                >
+                  aria-hidden="true">
                   <path
                     fillRule="evenodd"
                     d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -132,46 +125,23 @@ const NavBar = () => {
                   className="py-1"
                   role="menu"
                   aria-orientation="vertical"
-                  aria-labelledby="options-menu"
-                >
+                  aria-labelledby="options-menu">
                   <Link href={`/${user.username}`}>
                     <a
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                    >
+                      role="menuitem">
                       <span className="pr-4">
                         <AccountCircleIcon />
                       </span>
                       My Profile
                     </a>
                   </Link>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    <span className="pr-4">
-                      <GroupIcon />
-                    </span>
-                    Group Chat
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    role="menuitem"
-                  >
-                    <span className="pr-4">
-                      <SettingsIcon />
-                    </span>
-                    Settings
-                  </a>
                   <hr />
                   <button
                     type="submit"
                     className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                     role="menuitem"
-                    onClick={() => handleSignOut()}
-                  >
+                    onClick={() => handleSignOut()}>
                     <span className="pr-4">
                       <ExitToAppIcon htmlColor="#c53030" />
                     </span>
