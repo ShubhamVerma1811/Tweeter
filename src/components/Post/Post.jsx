@@ -8,13 +8,13 @@ import firebase from "firebase";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
-import { fetchTweetLikes, fetchTweetSaves } from "../../services/FetchUser";
+import { fetchTweetLikes, fetchTweetSaves } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";
 
 const Post = ({ tweet }) => {
   const { user } = useContext(UserContext);
   const [localTweet, setLocalTweet] = useState(tweet);
-  // (isliked, ()=> )
+
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [likeDocID, setLikeDocID] = useState("");
@@ -23,7 +23,13 @@ const Post = ({ tweet }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [saveDocID, setSaveDocID] = useState("");
 
+  const [comments, setComments] = useState(0);
+
   const likeTweet = async () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     const { id } = await firebase.firestore().collection("likes").add({
       userID: user.uid,
       tweetID: tweet.id,
@@ -34,6 +40,10 @@ const Post = ({ tweet }) => {
   };
 
   const dislikeTweet = () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     firebase.firestore().collection("likes").doc(likeDocID).delete();
     setLikes((prev) => prev - 1);
     setIsLiked(false);
@@ -42,9 +52,13 @@ const Post = ({ tweet }) => {
   const retweetTweets = () => {};
 
   const saveTweets = () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     const { id } = firebase.firestore().collection("saves").add({
       tweetID: tweet.id,
-      userID: tweet.author.uid,
+      userID: user.uid,
     });
     setSaves((prev) => prev + 1);
     setSaveDocID(id);
@@ -52,6 +66,10 @@ const Post = ({ tweet }) => {
   };
 
   const unsaveTweets = () => {
+    if (!user) {
+      alert("You need to sign in for that");
+      return;
+    }
     firebase.firestore().collection("saves").doc(saveDocID).delete();
     setSaves((prev) => prev - 1);
     setIsSaved(false);
@@ -78,7 +96,7 @@ const Post = ({ tweet }) => {
         const docs = await firebase
           .firestore()
           .collection("saves")
-          .where("userID", "==", tweet.author.uid)
+          .where("userID", "==", user.uid)
           .where("tweetID", "==", tweet.id)
           .get();
         if (docs.size === 1) {
@@ -87,139 +105,145 @@ const Post = ({ tweet }) => {
         }
       }
       checkForSaves();
+
+      async function getCommentsCount() {
+        const res = await firebase
+          .firestore()
+          .collection("tweets")
+          .where("parentTweet", "==", tweet.id)
+          .get();
+        setComments(res.size);
+      }
+      getCommentsCount();
     }
     setSaves((await fetchTweetSaves(localTweet.id)).size);
   }, []);
 
   return (
-    <Link href={`${tweet.author.username}/status/${tweet.id}`}>
-      <div className="p-5 bg-white rounded-lg">
-        <div className="flex items-center content-between">
-          <div className="w-16 h-16 overflow-hidden rounded-lg m-4">
-            <Avatar src={localTweet.author.profilePicture} />
-          </div>
-          <div>
-            <p className="font-poppins font-medium text-base my-1">
+    <div className="p-5 bg-white rounded-lg hover:bg-gray-100 cursor-pointer">
+      <div className="flex items-center content-between">
+        <div className="w-16 h-16 overflow-hidden rounded-lg m-4">
+          <Avatar src={localTweet.author.profilePicture} />
+        </div>
+        <div>
+          <Link href={`/${tweet.author.username}`}>
+            <p className="font-poppins font-medium text-base my-1 hover:underline">
               {localTweet.author.name}
             </p>
-            <p className="font-noto text-gray-500 text-base my-1">
-              {localTweet.createdAt}
-            </p>
-          </div>
-        </div>
-        <span>
-          <div className="font-noto text-base font-normal pt-4">
-            {localTweet.text}
-          </div>
-          {tweet.imgLink && (
-            <div className="my-5 h-64 overflow-hidden rounded-lg">
-              <a
-                href={localTweet.imgLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  className="w-full h-full object-cover"
-                  src={localTweet.imgLink}
-                  alt="POST IMG HERE"
-                />
-              </a>
-            </div>
-          )}
-          <div className="flex flex-row justify-end my-5">
-            <p className="mx-1 text-gray-500 font-noto font-medium">
-              449 Comments
-            </p>
-            <p className="mx-1 text-gray-500 font-noto font-medium">
-              {likes} Likes
-            </p>
-            <p className="mx-1 text-gray-500 font-noto font-medium">
-              {saves} Saved
-            </p>
-          </div>
-        </span>
-        <hr />
-        <div className="flex flex-row my-2 items-stretch">
-          <button
-            className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-            type="submit"
-          >
-            <span className="">
-              <ChatBubbleOutlineIcon style={{ color: "#828282" }} />
-            </span>
-            <span className="hidden lg:block">Comments</span>
-          </button>
-          <button
-            className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-            type="submit"
-          >
-            <span className="">
-              <SyncIcon style={{ color: "#828282" }} />
-            </span>
-            <span className="hidden lg:block">Retweets</span>
-          </button>
-          {isLiked ? (
-            <button
-              className="flex-1 mx-4 font-noto font-medium text-red-600 rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-              type="submit"
-              onClick={(e) => {
-                e.stopPropagation();
-                dislikeTweet();
-              }}
-            >
-              <span className="">
-                <FavoriteIcon style={{ color: "#e53e3e" }} />
-              </span>
-              <span className="hidden lg:block">Liked</span>
-            </button>
-          ) : (
-            <button
-              className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-              type="submit"
-              onClick={(e) => {
-                e.stopPropagation();
-                likeTweet();
-              }}
-            >
-              <span className="">
-                <FavoriteBorderIcon style={{ color: "#828282" }} />
-              </span>
-              <span className="hidden lg:block">Likes</span>
-            </button>
-          )}
-          {isSaved ? (
-            <button
-              className="flex-1 mx-4 font-noto font-medium rounded-lg text-blue-600 hover:bg-gray-400 cursor-pointer py-6"
-              type="submit"
-              onClick={(e) => {
-                e.stopPropagation();
-                unsaveTweets();
-              }}
-            >
-              <span className="">
-                <BookmarkIcon style={{ color: "#2D9CDB" }} />
-              </span>
-              <span className="hidden lg:block">Saved</span>
-            </button>
-          ) : (
-            <button
-              className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-              type="submit"
-              onClick={(e) => {
-                e.stopPropagation();
-                saveTweets();
-              }}
-            >
-              <span className="">
-                <BookmarkBorderIcon style={{ color: "#828282" }} />
-              </span>
-              <span className="hidden lg:block">Save</span>
-            </button>
-          )}
+          </Link>
+          <p className="font-poppins text-sm font-medium my-1 text-gray-700  ">
+            @{localTweet.author.username}
+          </p>
+          <p className="font-noto text-gray-500 text-base my-1">
+            {localTweet.createdAt}
+          </p>
         </div>
       </div>
-    </Link>
+      <span>
+        <div className="font-noto text-base font-normal pt-4">
+          {localTweet.text}
+        </div>
+        {tweet.imgLink && (
+          <div className="my-5 h-64 overflow-hidden rounded-lg">
+            <a
+              href={localTweet.imgLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}>
+              <img
+                className="w-full h-full object-cover"
+                src={localTweet.imgLink}
+                alt="POST IMG HERE"
+              />
+            </a>
+          </div>
+        )}
+        <div className="flex flex-row justify-end my-5">
+          <p className="mx-1 text-gray-500 font-noto font-medium">
+            {comments} Comments
+          </p>
+          <p className="mx-1 text-gray-500 font-noto font-medium">
+            {likes} Likes
+          </p>
+          <p className="mx-1 text-gray-500 font-noto font-medium">
+            {saves} Saved
+          </p>
+        </div>
+      </span>
+      <hr />
+      <div className="flex flex-row my-2 items-stretch">
+        <button
+          className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
+          type="submit">
+          <span className="">
+            <ChatBubbleOutlineIcon style={{ color: "#828282" }} />
+          </span>
+          <span className="hidden lg:block">Comments</span>
+        </button>
+        <button
+          className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
+          type="submit">
+          <span className="">
+            <SyncIcon style={{ color: "#828282" }} />
+          </span>
+          <span className="hidden lg:block">Retweets</span>
+        </button>
+        {isLiked ? (
+          <button
+            className="flex-1 mx-4 font-noto font-medium text-red-600 rounded-lg hover:bg-gray-400 cursor-pointer py-6"
+            type="submit"
+            onClick={(e) => {
+              e.stopPropagation();
+              dislikeTweet();
+            }}>
+            <span className="">
+              <FavoriteIcon style={{ color: "#e53e3e" }} />
+            </span>
+            <span className="hidden lg:block">Liked</span>
+          </button>
+        ) : (
+          <button
+            className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
+            type="submit"
+            onClick={(e) => {
+              e.stopPropagation();
+              likeTweet();
+            }}>
+            <span className="">
+              <FavoriteBorderIcon style={{ color: "#828282" }} />
+            </span>
+            <span className="hidden lg:block">Likes</span>
+          </button>
+        )}
+        {isSaved ? (
+          <button
+            className="flex-1 mx-4 font-noto font-medium rounded-lg text-blue-600 hover:bg-gray-400 cursor-pointer py-6"
+            type="submit"
+            onClick={(e) => {
+              e.stopPropagation();
+              unsaveTweets();
+            }}>
+            <span className="">
+              <BookmarkIcon style={{ color: "#2D9CDB" }} />
+            </span>
+            <span className="hidden lg:block">Saved</span>
+          </button>
+        ) : (
+          <button
+            className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
+            type="submit"
+            onClick={(e) => {
+              e.stopPropagation();
+              saveTweets();
+            }}>
+            <span className="">
+              <BookmarkBorderIcon style={{ color: "#828282" }} />
+            </span>
+            <span className="hidden lg:block">Save</span>
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 
