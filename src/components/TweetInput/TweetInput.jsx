@@ -47,15 +47,12 @@ const TweetInput = () => {
                     // file state
                     ref={fileInputRef}
                   />
-                  <span>
+                  <span className="hover:bg-gray-200 p-2 cursor-pointer">
                     <PhotoIcon
                       onClick={() => fileInputRef.current.click()}
                       style={{ color: "#3182ce" }}
                     />
                   </span>
-                </div>
-                <div className="mx-2">
-                  <PublicIcon style={{ color: "#3182ce" }} />
                 </div>
                 <div className="mr-0 ml-auto">
                   <button
@@ -75,8 +72,7 @@ const TweetInput = () => {
                         setImgLink(null);
                       }
                       postTweetandUploadFile();
-                    }}
-                  >
+                    }}>
                     Tweet
                   </button>
                 </div>
