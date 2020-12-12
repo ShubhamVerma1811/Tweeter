@@ -1,13 +1,13 @@
 import React from "react";
-import { fetchUser, fetchUserFollowings } from "../services/FetchUser";
+import { fetchUser, fetchUserFollowings } from "../services/FetchData";
 
 export function useFollowings(userId) {
   const [followings, setFollowings] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isFollowingsLoading, setIsFollowingsLoading] = React.useState(true);
 
-  const getFollowers = async () => {
+  const getFollowings = async () => {
     const data = [];
-    setIsLoading(true);
+    setIsFollowingsLoading(true);
     const followersSnapShot = await fetchUserFollowings(userId);
     for (let i = 0; i < followersSnapShot.size; i++) {
       data.push(
@@ -17,12 +17,8 @@ export function useFollowings(userId) {
       );
     }
     setFollowings(data);
-    setIsLoading(false);
+    setIsFollowingsLoading(false);
   };
 
-  React.useEffect(() => {
-    getFollowers();
-  }, []);
-
-  return { followings, isLoading };
+  return { followings, isFollowingsLoading, getFollowings };
 }
