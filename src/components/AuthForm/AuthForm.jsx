@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  handleSignIn,
-
-  handleSignUp
-} from "../../services/Authentication";
+import { handleSignIn, handleSignUp } from "../../services/Authentication";
 const AuthForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
