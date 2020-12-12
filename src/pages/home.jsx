@@ -1,6 +1,7 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import firebase from "firebase";
 import Head from "next/head";
+import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import Post from "../components/Post/Post";
 import Suggestions from "../components/Suggestions/Suggestions";
@@ -8,7 +9,7 @@ import Trends from "../components/Trends/Trends";
 import TweetInput from "../components/TweetInput/TweetInput";
 import UserContext from "../context/UserContext";
 import Layout from "../layouts";
-import { fetchUser } from "../services/FetchUser";
+import { fetchUser } from "../services/FetchData";
 
 const Home = () => {
   const [homeTweets, setHomeTweets] = useState([]);
@@ -33,6 +34,7 @@ const Home = () => {
           .firestore()
           .collection("tweets")
           .where("authorId", "in", followerIDs)
+          .where("parentTweet", "==", null)
           .orderBy("createdAt", "desc")
           .get();
 
@@ -65,35 +67,38 @@ const Home = () => {
         <title>Home | Tweeter</title>
       </Head>
 
-      <Layout />
-      <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-24 xl:mx-24 mt-5">
-        <div className="flex flex-col lg:grid lg:grid-cols-3 lg:col-gap-5">
-          <div className="lg:col-span-2">
-            <div className="mb-5">
-              <TweetInput />
-            </div>
-            {homeTweets && homeTweets.length > 0 ? (
-              homeTweets.map((tweet) => (
-                <div className="mb-5" key={tweet.id}>
-                  <Post tweet={tweet} />
-                </div>
-              ))
-            ) : (
-              <div className="flex justify-center">
-                <CircularProgress />
+      <Layout>
+        <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-24 xl:mx-24 mt-5">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 lg:col-gap-5">
+            <div className="lg:col-span-2">
+              <div className="mb-5">
+                <TweetInput />
               </div>
-            )}
-          </div>
-          <div className="hidden lg:block lg:col-span-1">
-            <div className="mb-5">
-              <Trends />
+              {homeTweets && homeTweets.length > 0 ? (
+                homeTweets.map((tweet) => (
+                  <Link href={`${tweet.author.username}/status/${tweet.id}`}>
+                    <div className="mb-5" key={tweet.id} key={tweet.id}>
+                      <Post tweet={tweet} />
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="flex justify-center">
+                  <CircularProgress />
+                </div>
+              )}
             </div>
-            <div className="mb-5">
-              <Suggestions />
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="mb-5">
+                <Trends />
+              </div>
+              <div className="mb-5">
+                <Suggestions />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </div>
   );
 };
