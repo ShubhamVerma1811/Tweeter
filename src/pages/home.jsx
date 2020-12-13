@@ -1,6 +1,4 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "../firebase/init";
-
 import Head from "next/head";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -9,8 +7,10 @@ import Suggestions from "../components/Suggestions/Suggestions";
 import Trends from "../components/Trends/Trends";
 import TweetInput from "../components/TweetInput/TweetInput";
 import UserContext from "../context/UserContext";
+import firebase from "../firebase/init";
 import Layout from "../layouts";
 import { fetchUser } from "../services/FetchData";
+
 
 const Home = () => {
   const [homeTweets, setHomeTweets] = useState([]);
@@ -59,7 +59,6 @@ const Home = () => {
     } catch (err) {
       console.log(err);
     }
-    console.log("once");
   }, [user]);
 
   return (

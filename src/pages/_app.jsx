@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import firebase from "../firebase/init";
@@ -8,6 +9,16 @@ const db = firebase.firestore();
 
 function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
+
+  const Router = useRouter();
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     if (Router.pathname === "/home") {
+  //       Router.push("/login");
+  //     }
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     async function getCurrentUser(userID) {

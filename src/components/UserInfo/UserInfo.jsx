@@ -1,9 +1,8 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import firebase from "../../firebase/init";
-
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
+import firebase from "../../firebase/init";
 import { useFollowers } from "../../hooks/useFollowers";
 import { useFollowings } from "../../hooks/useFollowings";
 import Avatar from "../Avatar/Avatar";
@@ -102,7 +101,7 @@ const UserInfo = ({ fetchedUser }) => {
           </span>
           {user && fetchedUser.username === user.username ? (
             <button
-              className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
+              className="lg:mr-0 lg:ml-auto bg-blue-700 text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
               onClick={() => startFollowing()}>
               <span className="mx-2">
@@ -112,7 +111,7 @@ const UserInfo = ({ fetchedUser }) => {
             </button>
           ) : isFollowing ? (
             <button
-              className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
+              className="lg:mr-0 lg:ml-auto bg-blue-700 text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
               onClick={() => stopFollowing()}>
               <span className="mx-2">
@@ -122,7 +121,7 @@ const UserInfo = ({ fetchedUser }) => {
             </button>
           ) : (
             <button
-              className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
+              className="lg:mr-0 lg:ml-auto bg-blue-700 text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
               type="submit"
               onClick={() => startFollowing()}>
               <span className="mx-2">

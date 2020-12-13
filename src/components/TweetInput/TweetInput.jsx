@@ -1,9 +1,7 @@
 import PhotoIcon from "@material-ui/icons/Photo";
-import PublicIcon from "@material-ui/icons/Public";
-import firebase from "../../firebase/init";
-
 import React, { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
+import firebase from "../../firebase/init";
 import postTweet from "../../services/PostTweet";
 import Avatar from "../Avatar/Avatar";
 
@@ -57,7 +55,7 @@ const TweetInput = () => {
                 </div>
                 <div className="mr-0 ml-auto">
                   <button
-                    className="bottom-0  bg-primary text-white px-8 py-4 rounded-md"
+                    className="bottom-0  bg-blue-700 text-white px-8 py-4 rounded-md"
                     type="submit"
                     onClick={() => {
                       // postTweet(user.uid, tweet, imgLink);

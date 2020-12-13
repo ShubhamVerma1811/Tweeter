@@ -11,17 +11,13 @@ const Suggestions = ({ type, userID }) => {
     const localUser = await fetchUser({
       userID,
     });
-    console.log(localUser);
     const followersCount = await fetchUserFollowers(localUser.uid);
     setUser({ ...localUser, followersCount: followersCount.size });
     setLoading(false);
   }, []);
 
   return (
-    <div
-      className="bg-white w-full p-5 rounded-lg"
-      // style={{ height: "max-content" }}
-    >
+    <div className="bg-white w-full p-5 rounded-lg">
       {type === "relavant" ? (
         <p className="font-poppins font-semibold text-base mb-3">
           Relavant People
@@ -50,7 +46,7 @@ const Suggestions = ({ type, userID }) => {
               </p>
             </div>
             <button
-              className="bg-primary mr-0 ml-auto text-white px-8 py-4 rounded-md lg:px-4 lg:py-2"
+              className="bg-blue-700 mr-0 ml-auto text-white px-8 py-4 rounded-md lg:px-4 lg:py-2"
               type="submit">
               Follow
             </button>
