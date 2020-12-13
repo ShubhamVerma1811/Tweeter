@@ -46,7 +46,7 @@ const Suggestions = ({ type, userID }) => {
               </p>
             </div>
             <button
-              className="bg-blue-700 mr-0 ml-auto text-white px-8 py-4 rounded-md lg:px-4 lg:py-2"
+              className="bg-primary mr-0 ml-auto text-white px-8 py-4 rounded-md lg:px-4 lg:py-2"
               type="submit">
               Follow
             </button>

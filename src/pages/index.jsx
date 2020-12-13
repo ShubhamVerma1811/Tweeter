@@ -6,7 +6,7 @@ const Home = () => {
       <div className=" h-full w-full mx-6 md:mx-24 xl:mx-64">
         <img src="/images/logos/tweeter-light.svg" alt="" />
         <div className="m-auto">
-          <AuthForm />
+          <AuthForm type="signIn" />
         </div>
       </div>
     </div>

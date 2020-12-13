@@ -57,7 +57,7 @@ const Modal = ({ users, close }) => {
               <div className="ml-auto mr-0 lg:mr-0 lg:ml-auto">
                 {isFollowing ? (
                   <button
-                    className="lg:mr-0 lg:ml-auto bg-blue-700 text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
+                    className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
                     type="submit"
                     onClick={() => stopFollowing()}>
                     <span className="mx-2">
@@ -67,7 +67,7 @@ const Modal = ({ users, close }) => {
                   </button>
                 ) : (
                   <button
-                    className="lg:mr-0 lg:ml-auto bg-blue-700 text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
+                    className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
                     type="submit"
                     onClick={() => startFollowing()}>
                     <span className="mx-2">

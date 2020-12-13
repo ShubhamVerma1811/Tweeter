@@ -9,11 +9,7 @@ class MyDocument extends Document {
   render() {
     return (
       <Html className="bg-gray-400">
-        <Head>
-          <link
-            href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-            rel="stylesheet"></link>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />

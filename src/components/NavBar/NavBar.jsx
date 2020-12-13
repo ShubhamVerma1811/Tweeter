@@ -30,7 +30,7 @@ const NavBar = () => {
           <Link href="/home">
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
-                router.route === "/home" ? "text-blue-700 font-semibold" : ""
+                router.route === "/home" ? "text-primary font-semibold" : ""
               }`}>
               Home
             </li>
@@ -38,7 +38,7 @@ const NavBar = () => {
           <Link href="/explore">
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
-                router.route === "/explore" ? "text-blue-700 font-semibold" : ""
+                router.route === "/explore" ? "text-primary font-semibold" : ""
               }`}>
               Explore
             </li>
@@ -47,7 +47,7 @@ const NavBar = () => {
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
                 router.route === "/bookmarks"
-                  ? "text-blue-700 font-semibold"
+                  ? "text-primary font-semibold"
                   : ""
               }`}>
               Bookmarks

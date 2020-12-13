@@ -6,7 +6,7 @@ import postTweet from "../../services/PostTweet";
 import Avatar from "../Avatar/Avatar";
 
 const TweetInput = () => {
-  const [tweet, setTweet] = useState("");
+  const [tweet, setTweet] = useState(null);
   const { user } = useContext(UserContext);
   const [imgLink, setImgLink] = useState(null);
   const [file, setFile] = useState(null);
@@ -42,6 +42,7 @@ const TweetInput = () => {
                   <input
                     type="file"
                     hidden
+                    value={tweet}
                     onChange={(e) => setFile(e.target.files[0])}
                     // file state
                     ref={fileInputRef}
@@ -55,7 +56,7 @@ const TweetInput = () => {
                 </div>
                 <div className="mr-0 ml-auto">
                   <button
-                    className="bottom-0  bg-blue-700 text-white px-8 py-4 rounded-md"
+                    className="bottom-0  bg-primary text-white px-8 py-4 rounded-md"
                     type="submit"
                     onClick={() => {
                       // postTweet(user.uid, tweet, imgLink);
@@ -65,9 +66,12 @@ const TweetInput = () => {
                         if (file) {
                           await uploadFile();
                         }
-                        postTweet(user.uid, tweet, imgLink);
+                        if (!tweet || tweet.trim() === "") {
+                          alert("Tweet cannot be empty");
+                        }
+                        postTweet(user.uid, tweet.trim(), imgLink);
                         setFile(null);
-                        setTweet("");
+                        setTweet(null);
                         setImgLink(null);
                       }
                       postTweetandUploadFile();

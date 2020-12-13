@@ -42,7 +42,7 @@ const AuthForm = ({ type }) => {
         onClick={() => {
           handleSignIn(email, password);
         }}
-        className="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-primary hover:bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="button">
         Sign In
       </button>
@@ -116,7 +116,7 @@ const AuthForm = ({ type }) => {
         onClick={() => {
           handleSignUp(email, password, username, name);
         }}
-        className="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-primary hover:bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="button">
         Sign Up
       </button>

@@ -6,55 +6,63 @@ import Post from "../components/Post/Post";
 import Suggestions from "../components/Suggestions/Suggestions";
 import Trends from "../components/Trends/Trends";
 import TweetInput from "../components/TweetInput/TweetInput";
+import HomeTweetsContext from "../context/HomeTweetsContext";
 import UserContext from "../context/UserContext";
 import firebase from "../firebase/init";
 import Layout from "../layouts";
 import { fetchUser } from "../services/FetchData";
 
-
 const Home = () => {
   const [homeTweets, setHomeTweets] = useState([]);
 
   const { user } = useContext(UserContext);
+  const { homeTweetsContext, setHomeTweetsContext } = useContext(
+    HomeTweetsContext
+  );
 
   useEffect(async () => {
     try {
       if (user) {
-        const connectionsRef = await firebase
-          .firestore()
-          .collection("connections")
-          .where("followerID", "==", user.uid)
-          .get();
+        if (!homeTweetsContext) {
+          const connectionsRef = await firebase
+            .firestore()
+            .collection("connections")
+            .where("followerID", "==", user.uid)
+            .get();
 
-        const followerIDs = connectionsRef.docs.map((connection) => {
-          const floID = connection.data().followeeID;
-          return floID;
-        });
-
-        const tweetsSnapShot = await firebase
-          .firestore()
-          .collection("tweets")
-          .where("authorId", "in", followerIDs)
-          .where("parentTweet", "==", null)
-          .orderBy("createdAt", "desc")
-          .get();
-
-        const homeUserTweets = [];
-
-        for (let i = 0; i < tweetsSnapShot.size; i++) {
-          const userInfo = await fetchUser({
-            userID: tweetsSnapShot.docs[i].data().authorId,
+          const followerIDs = connectionsRef.docs.map((connection) => {
+            const floID = connection.data().followeeID;
+            return floID;
           });
-          let data = tweetsSnapShot.docs[i].data();
 
-          homeUserTweets.push({
-            ...data,
-            createdAt: data.createdAt.toDate().toString(),
-            id: tweetsSnapShot.docs[i].id,
-            author: userInfo,
-          });
+          const tweetsSnapShot = await firebase
+            .firestore()
+            .collection("tweets")
+            .where("authorId", "in", followerIDs)
+            .where("parentTweet", "==", null)
+            .orderBy("createdAt", "desc")
+            .get();
+
+          const homeUserTweets = [];
+
+          for (let i = 0; i < tweetsSnapShot.size; i++) {
+            const userInfo = await fetchUser({
+              userID: tweetsSnapShot.docs[i].data().authorId,
+            });
+            let data = tweetsSnapShot.docs[i].data();
+
+            homeUserTweets.push({
+              ...data,
+              createdAt: data.createdAt.toDate().toString(),
+              id: tweetsSnapShot.docs[i].id,
+              author: userInfo,
+            });
+          }
+          setHomeTweets(homeUserTweets);
+          setHomeTweetsContext(homeUserTweets);
+        } else {
+          setHomeTweets(homeTweetsContext);
         }
-        setHomeTweets(homeUserTweets);
       }
     } catch (err) {
       console.log(err);
