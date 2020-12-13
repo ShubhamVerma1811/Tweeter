@@ -32,7 +32,6 @@ yarn-error.log*
 
 # vercel
 .vercel
-src/firebase/init.js
 
 # Created by https://www.toptal.com/developers/gitignore/api/react,firebase
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,firebase
