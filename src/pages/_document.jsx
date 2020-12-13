@@ -11,9 +11,8 @@ class MyDocument extends Document {
       <Html className="bg-gray-400">
         <Head>
           <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          />
+            href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+            rel="stylesheet"></link>
         </Head>
         <body>
           <Main />
