@@ -1,6 +1,7 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import firebase from "firebase";
+import firebase from "../../firebase/init";
+
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
 import { useFollowers } from "../../hooks/useFollowers";
@@ -86,8 +87,8 @@ const UserInfo = ({ fetchedUser }) => {
             <p
               className="inline mr-2 text-xs font-poppins font-semibold hover:underline cursor-pointer"
               onClick={async () => {
-                await getFollowers();
                 setIsModalOpen(true);
+                await getFollowers();
               }}>
               {fetchedUser.followersCount}
               <span className="m-1 text-gray-500">Followers</span>
@@ -143,7 +144,6 @@ const UserInfo = ({ fetchedUser }) => {
           )}
         </div>
       </div>
-
       {isModalOpen && (
         <div
           className="fixed w-4/5 h-full"
