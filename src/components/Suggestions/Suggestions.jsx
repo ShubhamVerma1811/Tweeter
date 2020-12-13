@@ -1,17 +1,17 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-
 import { useEffect, useState } from "react";
 import { fetchUser, fetchUserFollowers } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";
 
-const Suggestions = () => {
+const Suggestions = ({ type, userID }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     const localUser = await fetchUser({
-      userID: "RLxWOdfowdVStsGBI6rDWDoaXCZ2",
+      userID,
     });
+    console.log(localUser);
     const followersCount = await fetchUserFollowers(localUser.uid);
     setUser({ ...localUser, followersCount: followersCount.size });
     setLoading(false);
@@ -22,7 +22,15 @@ const Suggestions = () => {
       className="bg-white w-full p-5 rounded-lg"
       // style={{ height: "max-content" }}
     >
-      <p className="font-poppins font-semibold text-base mb-3">Who to Follow</p>
+      {type === "relavant" ? (
+        <p className="font-poppins font-semibold text-base mb-3">
+          Relavant People
+        </p>
+      ) : (
+        <p className="font-poppins font-semibold text-base mb-3">
+          Who to Follow
+        </p>
+      )}
       <hr />
       {loading && (
         <div className="flex justify-center">
