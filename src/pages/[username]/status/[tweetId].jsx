@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../../firebase/init";
 import Head from "next/head";
 import React from "react";
 import CommentInput from "../../../components/CommentInput/CommentInput";
@@ -18,14 +18,14 @@ const Tweet = ({ tweet }) => {
       </Head>
       <Layout>
         <div>
-          <div className="flex flex-col lg:gridlg: grid-cols-3 lg:col-gap-5 my-5 lg:mx=24 xl:mx-48">
+          <div className="flex flex-col lg:grid lg:grid-cols-3 lg:col-gap-5 my-5 lg:mx=24 xl:mx-48">
             <div className="col-span-2">
               <Post tweet={tweet} />
               <CommentInput tweetID={tweet.id} />
               <Comments tweetID={tweet.id} />
             </div>
             <div className="hidden lg:block">
-              <Suggestions />
+              <Suggestions type="relavant" userID={tweet.authorId} />
             </div>
           </div>
         </div>

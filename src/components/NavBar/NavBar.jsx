@@ -21,7 +21,7 @@ const NavBar = () => {
         <Link href="/home">
           <img
             className="cursor-pointer ml-4"
-            src="images/logos/tweeter.svg"
+            src="/images/logos/tweeter.svg"
             alt="logo"
           />
         </Link>

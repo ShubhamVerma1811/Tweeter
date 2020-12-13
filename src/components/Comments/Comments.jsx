@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../../firebase/init";
 import { useEffect, useState } from "react";
 import { fetchUser } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";

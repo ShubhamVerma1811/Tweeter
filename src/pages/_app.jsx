@@ -1,11 +1,8 @@
-import firebase from "firebase";
 import { useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
-import firebaseConfig from "../firebase/init";
+import firebase from "../firebase/init";
 import "../styles/global.css";
 import "../styles/reset.css";
-
-!firebase.apps.length && firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 

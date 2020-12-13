@@ -1,10 +1,10 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "firebase";
+import firebase from "../firebase/init";
+
 import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
+import Filters from "../components/Filters/Filters";
 import Post from "../components/Post/Post";
-import Suggestions from "../components/Suggestions/Suggestions";
-import Trends from "../components/Trends/Trends";
 import UserContext from "../context/UserContext";
 import Layout from "../layouts";
 import { fetchTweet } from "../services/FetchData";
@@ -53,6 +53,11 @@ const Bookmarks = () => {
       <Layout>
         <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-24 mt-5">
           <div className="flex flex-col lg:grid lg:grid-cols-3 lg:col-gap-5">
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="mb-5">
+                <Filters />
+              </div>
+            </div>
             <div className="lg:col-span-2">
               {loading && (
                 <div className="flex justify-center">
@@ -68,14 +73,6 @@ const Bookmarks = () => {
                   </div>
                 ))
               )}
-            </div>
-            <div className="hidden lg:block lg:col-span-1">
-              <div className="mb-5">
-                <Trends />
-              </div>
-              <div className="mb-5">
-                <Suggestions />
-              </div>
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import SyncIcon from "@material-ui/icons/Sync";
-import firebase from "firebase";
+import firebase from "../../firebase/init";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
@@ -144,7 +144,11 @@ const Post = ({ tweet }) => {
           {localTweet.text}
         </div>
         {tweet.imgLink && (
-          <div className="my-5 h-64 overflow-hidden rounded-lg">
+          <div
+            className="my-5 overflow-hidden rounded-lg"
+            style={{
+              height: "350px",
+            }}>
             <a
               href={localTweet.imgLink}
               target="_blank"

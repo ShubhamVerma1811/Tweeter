@@ -1,5 +1,6 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "firebase";
+import firebase from "../firebase/init";
+
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import ExploreFilters from "../components/ExploreFIlters/ExploreFilters";

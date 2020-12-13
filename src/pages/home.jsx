@@ -1,5 +1,6 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "firebase";
+import firebase from "../firebase/init";
+
 import Head from "next/head";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
@@ -93,7 +94,7 @@ const Home = () => {
                 <Trends />
               </div>
               <div className="mb-5">
-                <Suggestions />
+                {user && <Suggestions userID={user.uid} />}
               </div>
             </div>
           </div>

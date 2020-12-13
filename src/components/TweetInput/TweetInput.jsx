@@ -1,6 +1,7 @@
 import PhotoIcon from "@material-ui/icons/Photo";
 import PublicIcon from "@material-ui/icons/Public";
-import firebase from "firebase";
+import firebase from "../../firebase/init";
+
 import React, { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import postTweet from "../../services/PostTweet";
