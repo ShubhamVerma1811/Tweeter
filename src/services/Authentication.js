@@ -1,7 +1,5 @@
 import firebase from "firebase";
 
-// firebase.auth().useEmulator("http://localhost:9099");
-
 async function handleSignUp(email, password, username, name) {
   try {
     const { user } = await firebase
@@ -10,10 +8,12 @@ async function handleSignUp(email, password, username, name) {
     await firebase.firestore().collection("users").doc(user.uid).set({
       username,
       email: user.email,
-      profilePicture: null,
+      profilePicture:
+        "https://firebasestorage.googleapis.com/v0/b/tweeter-45929.appspot.com/o/defaultAvatar.jpg?alt=media&token=072d3268-84f4-4016-b0f7-d440930347f2",
       name,
       bio: null,
     });
+    window.location.replace("/home");
     return user;
   } catch (error) {
     console.error(error);
@@ -26,7 +26,7 @@ async function handleSignIn(email, password) {
     const user = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
-
+    window.location.replace("/home");
     return user;
   } catch (error) {
     console.error(error);
@@ -37,6 +37,7 @@ async function handleSignIn(email, password) {
 async function handleSignOut() {
   try {
     await firebase.auth().signOut();
+    window.location.replace("/login");
     return true;
   } catch (error) {
     console.error(error);
