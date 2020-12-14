@@ -37,7 +37,7 @@ async function handleSignIn(email, password) {
 async function handleSignOut() {
   try {
     await firebase.auth().signOut();
-    window.location.replace("/login");
+    window.location.replace("/");
     return true;
   } catch (error) {
     console.error(error);

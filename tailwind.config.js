@@ -11,6 +11,7 @@ module.exports = {
       },
       backgroundImage: (theme) => ({
         banner: "url('/images/banner.jpg')",
+        logo:"url('/images/logos/tweeter-small.svg')"
       }),
     },
   },
