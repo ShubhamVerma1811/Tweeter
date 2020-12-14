@@ -13,7 +13,6 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <script src="https://awesomecdn.netlify.app/tw.js"></script>
         </body>
       </Html>
     );
