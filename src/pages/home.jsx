@@ -101,7 +101,7 @@ const Home = () => {
                 <Trends />
               </div>
               <div className="mb-5">
-                {user && <Suggestions userID={user.uid} />}
+                {user && <Suggestions userID="RLxWOdfowdVStsGBI6rDWDoaXCZ2" />}
               </div>
             </div>
           </div>

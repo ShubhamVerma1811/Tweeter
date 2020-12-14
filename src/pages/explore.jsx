@@ -1,40 +1,48 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "../firebase/init";
-
 import Head from "next/head";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import ExploreFilters from "../components/ExploreFIlters/ExploreFilters";
 import Post from "../components/Post/Post";
+import ExploreTweetsContext from "../context/ExploreTweetsContext";
+import firebase from "../firebase/init";
 import Layout from "../layouts";
 import { fetchUser } from "../services/FetchData";
-import Link from "next/link";
 
 const Explore = () => {
   const [exploreTweets, setExploreTweets] = useState([]);
+  const { exploreTweetsContext, setExploreTweetsContext } = React.useContext(
+    ExploreTweetsContext
+  );
 
   useEffect(async () => {
-    const tweetsSnapShot = await firebase
-      .firestore()
-      .collection("tweets")
-      .limit(5)
-      .get();
+    if (!exploreTweetsContext) {
+      const tweetsSnapShot = await firebase
+        .firestore()
+        .collection("tweets")
+        .limit(5)
+        .get();
 
-    const exploreUserTweets = [];
+      const exploreUserTweets = [];
 
-    for (let i = 0; i < tweetsSnapShot.size; i++) {
-      const userInfo = await fetchUser({
-        userID: tweetsSnapShot.docs[i].data().authorId,
-      });
-      let data = tweetsSnapShot.docs[i].data();
+      for (let i = 0; i < tweetsSnapShot.size; i++) {
+        const userInfo = await fetchUser({
+          userID: tweetsSnapShot.docs[i].data().authorId,
+        });
+        let data = tweetsSnapShot.docs[i].data();
 
-      exploreUserTweets.push({
-        ...data,
-        createdAt: data.createdAt.toDate().toString(),
-        id: tweetsSnapShot.docs[i].id,
-        author: userInfo,
-      });
+        exploreUserTweets.push({
+          ...data,
+          createdAt: data.createdAt.toDate().toString(),
+          id: tweetsSnapShot.docs[i].id,
+          author: userInfo,
+        });
+      }
+      setExploreTweets(exploreUserTweets);
+      setExploreTweetsContext(exploreUserTweets);
+    } else {
+      setExploreTweets(exploreTweetsContext);
     }
-    setExploreTweets(exploreUserTweets);
   }, []);
 
   return (

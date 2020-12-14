@@ -1,11 +1,12 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
-import firebase from "../firebase/init";
-
 import Head from "next/head";
+import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import Filters from "../components/Filters/Filters";
 import Post from "../components/Post/Post";
+import BookmarksTweetsContext from "../context/BookmarksTweetsContext";
 import UserContext from "../context/UserContext";
+import firebase from "../firebase/init";
 import Layout from "../layouts";
 import { fetchTweet } from "../services/FetchData";
 
@@ -14,34 +15,44 @@ const Bookmarks = () => {
   const [bookmarkTweets, setBookmarkTweets] = useState([]);
   const [loading, setIsLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
+  const { bookmarksTweetsContext, setBookmarksTweetsContext } = useContext(
+    BookmarksTweetsContext
+  );
 
   useEffect(() => {
     if (user) {
-      async function getSavedTweets() {
-        const localBMTweets = [];
-        const savesSnapShot = await firebase
-          .firestore()
-          .collection("saves")
-          .where("userID", "==", user.uid)
-          .get();
+      if (!bookmarksTweetsContext) {
+        async function getSavedTweets() {
+          const localBMTweets = [];
+          const savesSnapShot = await firebase
+            .firestore()
+            .collection("saves")
+            .where("userID", "==", user.uid)
+            .get();
 
-        if (savesSnapShot.empty) {
-          setIsEmpty(true);
-          setBookmarkTweets([]);
-          setIsLoading(false);
-        } else {
-          for (let i = 0; i < savesSnapShot.size; i++) {
-            const tweet = await fetchTweet(
-              savesSnapShot.docs[i].data().tweetID
-            );
-            localBMTweets.push(tweet);
+          if (savesSnapShot.empty) {
+            setIsEmpty(true);
+            setBookmarkTweets([]);
+            setIsLoading(false);
+          } else {
+            for (let i = 0; i < savesSnapShot.size; i++) {
+              const tweet = await fetchTweet(
+                savesSnapShot.docs[i].data().tweetID
+              );
+              localBMTweets.push(tweet);
+            }
+            setBookmarkTweets(localBMTweets);
+            setBookmarksTweetsContext(localBMTweets);
+            setIsEmpty(false);
+            setIsLoading(false);
           }
-          setBookmarkTweets(localBMTweets);
-          setIsEmpty(false);
-          setIsLoading(false);
         }
+        getSavedTweets(user.uid);
+      } else {
+        setBookmarkTweets(bookmarksTweetsContext);
+        setIsEmpty(false);
+        setIsLoading(false);
       }
-      getSavedTweets(user.uid);
     }
   }, [user]);
 
@@ -68,9 +79,11 @@ const Bookmarks = () => {
                 <h1>You have no Saved Tweets</h1>
               ) : (
                 bookmarkTweets.map((tweet) => (
-                  <div className="mb-5">
-                    <Post tweet={tweet} />
-                  </div>
+                  <Link href={`${tweet.author.username}/status/${tweet.id}`}>
+                    <div className="mb-5">
+                      <Post tweet={tweet} />
+                    </div>
+                  </Link>
                 ))
               )}
             </div>
