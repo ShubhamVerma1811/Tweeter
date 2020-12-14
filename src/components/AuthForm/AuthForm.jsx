@@ -166,7 +166,7 @@ const AuthForm = ({ type }) => {
           <div className="flex flex-row items-center flex-wrap">
             <button
               onClick={(e) => {
-                e.preventDefault()
+                e.preventDefault();
                 handleSignUp(email, password, username, name);
               }}
               className="bg-primary hover:bg-primary text-white font-bold py-4 px-8 rounded focus:outline-none focus:shadow-outline"

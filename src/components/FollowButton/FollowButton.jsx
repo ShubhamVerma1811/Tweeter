@@ -57,7 +57,7 @@ const FollowButton = ({ userID }) => {
       <button
         className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
         type="submit"
-        onClick={() => (isFollowing ? stopFollowing : startFollowing())}>
+        onClick={() => (isFollowing ? stopFollowing() : startFollowing())}>
         <span className="mx-2">
           <PersonAddIcon />
         </span>

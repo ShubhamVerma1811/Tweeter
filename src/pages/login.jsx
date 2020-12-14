@@ -8,7 +8,11 @@ const SignUp = () => {
       <div className="w-full lg:w-2/4 p-6 pb-0">
         <div className="my-4 py-2">
           <Link href="/">
-            <img className="cursor-pointer" src="/images/logos/tweeter-light.svg" alt="logo" />
+            <img
+              className="cursor-pointer"
+              src="/images/logos/tweeter-light.svg"
+              alt="logo"
+            />
           </Link>
         </div>
         <div className="">

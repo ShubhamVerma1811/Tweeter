@@ -13,9 +13,11 @@ import Layout from "../layouts";
 import { fetchUser } from "../services/FetchData";
 
 const Home = () => {
-  const [homeTweets, setHomeTweets] = useState([]);
-
   const { user } = useContext(UserContext);
+  const [homeTweets, setHomeTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(false);
+
   const { homeTweetsContext, setHomeTweetsContext } = useContext(
     HomeTweetsContext
   );
@@ -24,43 +26,52 @@ const Home = () => {
     try {
       if (user) {
         if (!homeTweetsContext) {
+          setLoading(true);
           const connectionsRef = await firebase
             .firestore()
             .collection("connections")
             .where("followerID", "==", user.uid)
             .get();
 
-          const followerIDs = connectionsRef.docs.map((connection) => {
-            const floID = connection.data().followeeID;
-            return floID;
-          });
-
-          const tweetsSnapShot = await firebase
-            .firestore()
-            .collection("tweets")
-            .where("authorId", "in", followerIDs)
-            .where("parentTweet", "==", null)
-            .orderBy("createdAt", "desc")
-            .get();
-
-          const homeUserTweets = [];
-
-          for (let i = 0; i < tweetsSnapShot.size; i++) {
-            const userInfo = await fetchUser({
-              userID: tweetsSnapShot.docs[i].data().authorId,
+          if (connectionsRef.empty) {
+            setIsEmpty(true);
+            setHomeTweets([]);
+            setLoading(false);
+          } else {
+            const followerIDs = connectionsRef.docs.map((connection) => {
+              const floID = connection.data().followeeID;
+              return floID;
             });
-            let data = tweetsSnapShot.docs[i].data();
 
-            homeUserTweets.push({
-              ...data,
-              createdAt: data.createdAt.toDate().toString(),
-              id: tweetsSnapShot.docs[i].id,
-              author: userInfo,
-            });
+            const tweetsSnapShot = await firebase
+              .firestore()
+              .collection("tweets")
+              .where("authorId", "in", followerIDs)
+              .where("parentTweet", "==", null)
+              .orderBy("createdAt", "desc")
+              .get();
+
+            const homeUserTweets = [];
+
+            for (let i = 0; i < tweetsSnapShot.size; i++) {
+              const userInfo = await fetchUser({
+                userID: tweetsSnapShot.docs[i].data().authorId,
+              });
+              let data = tweetsSnapShot.docs[i].data();
+
+              homeUserTweets.push({
+                ...data,
+                createdAt: data.createdAt.toDate().toString(),
+                id: tweetsSnapShot.docs[i].id,
+                author: userInfo,
+              });
+            }
+            setHomeTweets(homeUserTweets);
+            setLoading(false);
+            setHomeTweetsContext(homeUserTweets);
           }
-          setHomeTweets(homeUserTweets);
-          setHomeTweetsContext(homeUserTweets);
         } else {
+          setLoading(false);
           setHomeTweets(homeTweetsContext);
         }
       }
@@ -82,7 +93,15 @@ const Home = () => {
               <div className="mb-5">
                 <TweetInput />
               </div>
-              {homeTweets && homeTweets.length > 0 ? (
+              {loading && (
+                <div className="flex justify-center">
+                  <CircularProgress />
+                </div>
+              )}
+
+              {isEmpty ? (
+                <h1>You are following no one</h1>
+              ) : (
                 homeTweets.map((tweet) => (
                   <Link href={`${tweet.author.username}/status/${tweet.id}`}>
                     <div className="mb-5" key={tweet.id} key={tweet.id}>
@@ -90,10 +109,6 @@ const Home = () => {
                     </div>
                   </Link>
                 ))
-              ) : (
-                <div className="flex justify-center">
-                  <CircularProgress />
-                </div>
               )}
             </div>
             <div className="hidden lg:block lg:col-span-1">
