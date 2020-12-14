@@ -2,6 +2,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useEffect, useState } from "react";
 import { fetchUser, fetchUserFollowers } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";
+import FollowButton from "../FollowButton/FollowButton";
 
 const Suggestions = ({ type, userID }) => {
   const [user, setUser] = useState(null);
@@ -45,11 +46,9 @@ const Suggestions = ({ type, userID }) => {
                 {user.followersCount} Followers
               </p>
             </div>
-            <button
-              className="bg-primary mr-0 ml-auto text-white px-8 py-4 rounded-md lg:px-4 lg:py-2"
-              type="submit">
-              Follow
-            </button>
+            <div className="mr-0 ml-auto">
+              <FollowButton userID={user.uid} />
+            </div>
           </div>
           <div>
             <p className="font-noto font-medium text-gray-600 my-4">
