@@ -57,7 +57,8 @@ const TweetInput = () => {
                     <button
                       className="bottom-0  bg-primary text-white px-8 py-4 rounded-md"
                       type="submit"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
                         async function postTweetandUploadFile() {
                           if (file) {
                             await uploadFile();
