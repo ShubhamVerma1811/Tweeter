@@ -2,12 +2,11 @@ import PhotoIcon from "@material-ui/icons/Photo";
 import React, { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import firebase from "../../firebase/init";
-import postTweet from "../../services/PostTweet";
 import Avatar from "../Avatar/Avatar";
 
 const TweetInput = () => {
-  const [tweet, setTweet] = useState(null);
   const { user } = useContext(UserContext);
+  const [tweet, setTweet] = useState("");
   const [imgLink, setImgLink] = useState(null);
   const [file, setFile] = useState(null);
 
@@ -30,56 +29,51 @@ const TweetInput = () => {
 
           <div className="w-full mx-5">
             <div className="flex flex-col">
-              <textarea
-                className="w-full h-16 font-noto font-medium text-base text-gray-500"
-                name="tweet-input"
-                placeholder="What's Happening?"
-                type="text"
-                onChange={(e) => setTweet(e.target.value)}
-              />
-              <div className="flex items-center mt-3">
-                <div className="mx-2">
-                  <input
-                    type="file"
-                    hidden
-                    value={tweet}
-                    onChange={(e) => setFile(e.target.files[0])}
-                    // file state
-                    ref={fileInputRef}
-                  />
-                  <span className="hover:bg-gray-200 p-2 cursor-pointer">
-                    <PhotoIcon
-                      onClick={() => fileInputRef.current.click()}
-                      style={{ color: "#3182ce" }}
+              <form>
+                <textarea
+                  className="w-full h-16 font-noto font-medium text-base text-gray-500"
+                  name="tweet-input"
+                  placeholder="What's Happening?"
+                  type="text"
+                  value={tweet}
+                  onChange={(e) => setTweet(e.target.value)}
+                  required></textarea>
+                <div className="flex items-center mt-3">
+                  <div className="mx-2">
+                    <input
+                      type="file"
+                      hidden
+                      onChange={(e) => setFile(e.target.files[0])}
+                      ref={fileInputRef}
                     />
-                  </span>
-                </div>
-                <div className="mr-0 ml-auto">
-                  <button
-                    className="bottom-0  bg-primary text-white px-8 py-4 rounded-md"
-                    type="submit"
-                    onClick={() => {
-                      // postTweet(user.uid, tweet, imgLink);
-                      // new post tweet -> finel pload, org postTweet()
-                      // get file from state upload and get link
-                      async function postTweetandUploadFile() {
-                        if (file) {
-                          await uploadFile();
+                    <span className="hover:bg-gray-200 p-2 cursor-pointer">
+                      <PhotoIcon
+                        onClick={() => fileInputRef.current.click()}
+                        style={{ color: "#3182ce" }}
+                      />
+                    </span>
+                  </div>
+                  <div className="mr-0 ml-auto">
+                    <button
+                      className="bottom-0  bg-primary text-white px-8 py-4 rounded-md"
+                      type="submit"
+                      onClick={() => {
+                        async function postTweetandUploadFile() {
+                          if (file) {
+                            await uploadFile();
+                          }
+                          postTweet(user.uid, tweet.trim(), imgLink);
+                          setFile(null);
+                          setTweet(null);
+                          setImgLink(null);
                         }
-                        if (!tweet || tweet.trim() === "") {
-                          alert("Tweet cannot be empty");
-                        }
-                        postTweet(user.uid, tweet.trim(), imgLink);
-                        setFile(null);
-                        setTweet(null);
-                        setImgLink(null);
-                      }
-                      postTweetandUploadFile();
-                    }}>
-                    Tweet
-                  </button>
+                        postTweetandUploadFile();
+                      }}>
+                      Tweet
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
