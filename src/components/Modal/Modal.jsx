@@ -1,11 +1,12 @@
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import firebase from "../../firebase/init";
 import Avatar from "../Avatar/Avatar";
+import FollowButton from "../FollowButton/FollowButton";
 
-const Modal = ({ users, close }) => {
+const Modal = ({ users, close, loading }) => {
   const { user } = useContext(UserContext);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followingDocID, setFollowingDocID] = useState("");
@@ -22,8 +23,12 @@ const Modal = ({ users, close }) => {
           </p>
         </div>
       </div>
+      {loading && (
+        <div className="flex justify-center">
+          <CircularProgress />
+        </div>
+      )}
       <hr />
-
       {users.map((localUser) => {
         if (localUser) {
           const result = firebase
@@ -55,36 +60,14 @@ const Modal = ({ users, close }) => {
                 <p className="font-noto text-gray-600 py-2">120k Followers</p>
               </div>
               <div className="ml-auto mr-0 lg:mr-0 lg:ml-auto">
-                {isFollowing ? (
-                  <button
-                    className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
-                    type="submit"
-                    onClick={() => stopFollowing()}>
-                    <span className="mx-2">
-                      <PersonAddIcon />
-                    </span>
-                    Following
-                  </button>
-                ) : (
-                  <button
-                    className="lg:mr-0 lg:ml-auto bg-primary text-white px-2 py-4  lg:px-8 lg:py-4 rounded-md"
-                    type="submit"
-                    onClick={() => startFollowing()}>
-                    <span className="mx-2">
-                      <PersonAddIcon />
-                    </span>
-                    Follow
-                  </button>
-                )}
+                <FollowButton userID={localUser.uid} />
               </div>
             </div>
-            {user.bio && (
-              <div>
-                <p className="font-noto font-medium text-gray-600">
-                  {user.bio}
-                </p>
-              </div>
-            )}
+            <div>
+              <p className="font-noto font-medium text-gray-600">
+                {localUser.bio ? localUser.bio : "404 Bio Not Found"}
+              </p>
+            </div>
           </div>
         );
       })}
