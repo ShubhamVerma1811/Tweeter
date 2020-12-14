@@ -49,8 +49,6 @@ const Post = ({ tweet }) => {
     setIsLiked(false);
   };
 
-  const retweetTweets = () => {};
-
   const saveTweets = () => {
     if (!user) {
       alert("You need to sign in for that");
@@ -183,14 +181,6 @@ const Post = ({ tweet }) => {
             <ChatBubbleOutlineIcon style={{ color: "#828282" }} />
           </span>
           <span className="hidden lg:block">Comments</span>
-        </button>
-        <button
-          className="flex-1 mx-4 font-noto font-medium rounded-lg hover:bg-gray-400 cursor-pointer py-6"
-          type="submit">
-          <span className="">
-            <SyncIcon style={{ color: "#828282" }} />
-          </span>
-          <span className="hidden lg:block">Retweets</span>
         </button>
         {isLiked ? (
           <button
