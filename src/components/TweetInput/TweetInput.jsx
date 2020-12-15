@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import firebase from "../../firebase/init";
 import Avatar from "../Avatar/Avatar";
+import postTweet from "../../services/PostTweet"
 
 const TweetInput = () => {
   const { user } = useContext(UserContext);
