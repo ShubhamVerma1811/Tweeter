@@ -1,5 +1,5 @@
-import firebase from "../../firebase/init";
 import { useEffect, useState } from "react";
+import firebase from "../../firebase/init";
 import { fetchUser } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";
 
@@ -8,28 +8,34 @@ const Comments = ({ tweetID }) => {
 
   useEffect(() => {
     const getComments = async () => {
-      const tweetsRef = await firebase
-        .firestore()
-        .collection("tweets")
-        .where("parentTweet", "==", tweetID)
-        .get();
-      const localComments = [];
+      try {
+        firebase
+          .firestore()
+          .collection("tweets")
+          .where("parentTweet", "==", tweetID)
+          .onSnapshot(async (tweetsRef) => {
+            const localComments = [];
 
-      for (let i = 0; i < tweetsRef.size; i++) {
-        const tweet = tweetsRef.docs[i].data();
-        const id = tweetsRef.docs[i].id;
-        const userInfo = await fetchUser({
-          userID: tweet.authorId,
-        });
-        localComments.push({
-          ...tweet,
-          id,
-          createdAt: tweet.createdAt.toDate().toString(),
-          author: userInfo,
-        });
+            for (let i = 0; i < tweetsRef.size; i++) {
+              const tweet = tweetsRef.docs[i].data({
+                serverTimestamps: "estimate",
+              });
+              const id = tweetsRef.docs[i].id;
+              const userInfo = await fetchUser({
+                userID: tweet.authorId,
+              });
+              localComments.push({
+                ...tweet,
+                id,
+                createdAt: tweet.createdAt.toDate().toString(),
+                author: userInfo,
+              });
+            }
+            setComments(localComments);
+          });
+      } catch (err) {
+        console.log(err);
       }
-
-      setComments(localComments);
     };
 
     getComments();
