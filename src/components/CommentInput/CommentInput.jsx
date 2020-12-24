@@ -5,7 +5,7 @@ import Avatar from "../Avatar/Avatar";
 
 const CommentInput = ({ tweetID }) => {
   const { user } = useContext(UserContext);
-  const [comment, setComment] = useState(null);
+  const [comment, setComment] = useState("");
 
   return (
     <div className="bg-white">
@@ -19,11 +19,13 @@ const CommentInput = ({ tweetID }) => {
             onSubmit={(e) => {
               e.preventDefault();
               postTweet(user.uid, comment, null, tweetID);
+              setComment("");
             }}>
             <input
               className="bg-gray-200 placeholder-gray-600  rounded-lg h-12 w-full font-noto text-sm font-medium"
               type="text"
               placeholder="Tweet your Reply"
+              value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
           </form>
