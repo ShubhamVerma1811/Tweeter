@@ -43,32 +43,32 @@ const Home = () => {
               return floID;
             });
 
-            const tweetsSnapShot = await firebase
+            firebase
               .firestore()
               .collection("tweets")
               .where("authorId", "in", followerIDs)
               .where("parentTweet", "==", null)
               .orderBy("createdAt", "desc")
-              .get();
+              .onSnapshot(async (tweetRef) => {
+                const homeUserTweets = [];
 
-            const homeUserTweets = [];
+                for (let i = 0; i < tweetRef.size; i++) {
+                  const userInfo = await fetchUser({
+                    userID: tweetRef.docs[i].data().authorId,
+                  });
+                  let data = tweetRef.docs[i].data();
 
-            for (let i = 0; i < tweetsSnapShot.size; i++) {
-              const userInfo = await fetchUser({
-                userID: tweetsSnapShot.docs[i].data().authorId,
+                  homeUserTweets.push({
+                    ...data,
+                    createdAt: data.createdAt.toDate().toString(),
+                    id: tweetRef.docs[i].id,
+                    author: userInfo,
+                  });
+                }
+                setHomeTweets(homeUserTweets);
+                setLoading(false);
+                setHomeTweetsContext(homeUserTweets);
               });
-              let data = tweetsSnapShot.docs[i].data();
-
-              homeUserTweets.push({
-                ...data,
-                createdAt: data.createdAt.toDate().toString(),
-                id: tweetsSnapShot.docs[i].id,
-                author: userInfo,
-              });
-            }
-            setHomeTweets(homeUserTweets);
-            setLoading(false);
-            setHomeTweetsContext(homeUserTweets);
           }
         } else {
           setLoading(false);
@@ -103,11 +103,13 @@ const Home = () => {
                 <h1>You are following no one</h1>
               ) : (
                 homeTweets.map((tweet) => (
-                  <Link href={`${tweet.author.username}/status/${tweet.id}`}>
-                    <div className="mb-5" key={tweet.id} key={tweet.id}>
-                      <Post tweet={tweet} />
-                    </div>
-                  </Link>
+                  <span key={tweet.id}>
+                    <Link href={`${tweet.author.username}/status/${tweet.id}`}>
+                      <div className="mb-5">
+                        <Post tweet={tweet} />
+                      </div>
+                    </Link>
+                  </span>
                 ))
               )}
             </div>
@@ -116,7 +118,7 @@ const Home = () => {
                 <Trends />
               </div>
               <div className="mb-5">
-                {user && <Suggestions userID="RLxWOdfowdVStsGBI6rDWDoaXCZ2" />}
+                {user && <Suggestions userID="NpVRgALXkJSyA7sa4wVgKA6Adu03" />}
               </div>
             </div>
           </div>
