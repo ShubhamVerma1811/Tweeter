@@ -1,13 +1,14 @@
 import BookmarkIcon from "@material-ui/icons/Bookmark";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
+import DeleteIcon from "@material-ui/icons/Delete";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import SyncIcon from "@material-ui/icons/Sync";
-import firebase from "../../firebase/init";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../context/UserContext";
+import firebase from "../../firebase/init";
+import { deleteTweet } from "../../services/DeleteTweet";
 import { fetchTweetLikes, fetchTweetSaves } from "../../services/FetchData";
 import Avatar from "../Avatar/Avatar";
 
@@ -24,6 +25,8 @@ const Post = ({ tweet }) => {
   const [saveDocID, setSaveDocID] = useState("");
 
   const [comments, setComments] = useState(0);
+
+  const [myTweet, setMyTweet] = useState(false);
 
   const likeTweet = async () => {
     if (!user) {
@@ -113,17 +116,20 @@ const Post = ({ tweet }) => {
         setComments(res.size);
       }
       getCommentsCount();
+      if (user.uid === tweet.author.uid) {
+        setMyTweet(true);
+      }
     }
     setSaves((await fetchTweetSaves(localTweet.id)).size);
   }, []);
 
   return (
     <div className="p-5 bg-white rounded-lg hover:bg-gray-100 cursor-pointer">
-      <div className="flex items-center content-between">
+      <div className="flex items-center content-evenly">
         <div className="w-16 h-16 overflow-hidden rounded-lg m-4">
           <Avatar src={localTweet.author.profilePicture} />
         </div>
-        <div>
+        <div className="w-full">
           <Link href={`/${tweet.author.username}`}>
             <p className="font-poppins font-medium text-base my-1 hover:underline">
               {localTweet.author.name}
@@ -136,6 +142,21 @@ const Post = ({ tweet }) => {
             {localTweet.createdAt}
           </p>
         </div>
+        {myTweet && (
+          <div
+            className="w-16 h-16 flex flex-col justify-center items-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              const answer = confirm(
+                "Are you sure you want to delete this tweet?"
+              );
+              if (answer) {
+                deleteTweet(tweet.id);
+              }
+            }}>
+            <DeleteIcon htmlColor={"red"} fontSize="medium" />
+          </div>
+        )}
       </div>
       <span>
         <div className="font-noto text-base font-normal pt-4">
