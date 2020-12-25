@@ -38,13 +38,13 @@ const UserInfo = ({ fetchedUser }) => {
                 await getFollowers();
                 setIsModalLoading(false);
               }}>
-              {fetchedUser.followersCount}
+              {fetchedUser.followersCount - 1}
               <span className="m-1 text-gray-500">Followers</span>
             </p>
             <p
               className="inline m-2 text-xs font-poppins font-semibold hover:underline cursor-pointer"
               onClick={() => getFollowings()}>
-              {fetchedUser.followingsCount}
+              {fetchedUser.followingsCount - 1}
               <span className="m-1 text-gray-500"> Following</span>
             </p>
           </span>
