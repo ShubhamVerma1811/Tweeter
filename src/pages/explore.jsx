@@ -17,29 +17,29 @@ const Explore = () => {
 
   useEffect(async () => {
     if (!exploreTweetsContext) {
-      const tweetsSnapShot = await firebase
+      firebase
         .firestore()
         .collection("tweets")
         .limit(5)
-        .get();
+        .onSnapshot(async (tweetRef) => {
+          const exploreUserTweets = [];
 
-      const exploreUserTweets = [];
+          for (let i = 0; i < tweetRef.size; i++) {
+            const userInfo = await fetchUser({
+              userID: tweetRef.docs[i].data().authorId,
+            });
+            let data = tweetRef.docs[i].data();
 
-      for (let i = 0; i < tweetsSnapShot.size; i++) {
-        const userInfo = await fetchUser({
-          userID: tweetsSnapShot.docs[i].data().authorId,
+            exploreUserTweets.push({
+              ...data,
+              createdAt: data.createdAt.toDate().toString(),
+              id: tweetRef.docs[i].id,
+              author: userInfo,
+            });
+          }
+          setExploreTweets(exploreUserTweets);
+          setExploreTweetsContext(exploreUserTweets);
         });
-        let data = tweetsSnapShot.docs[i].data();
-
-        exploreUserTweets.push({
-          ...data,
-          createdAt: data.createdAt.toDate().toString(),
-          id: tweetsSnapShot.docs[i].id,
-          author: userInfo,
-        });
-      }
-      setExploreTweets(exploreUserTweets);
-      setExploreTweetsContext(exploreUserTweets);
     } else {
       setExploreTweets(exploreTweetsContext);
     }
@@ -61,11 +61,13 @@ const Explore = () => {
             <div className="lg:col-span-2">
               {exploreTweets && exploreTweets.length > 0 ? (
                 exploreTweets.map((tweet) => (
-                  <Link href={`${tweet.author.username}/status/${tweet.id}`}>
-                    <div className="mb-5">
-                      <Post tweet={tweet} />
-                    </div>
-                  </Link>
+                  <span key={tweet.id}>
+                    <Link href={`${tweet.author.username}/status/${tweet.id}`}>
+                      <div className="mb-5">
+                        <Post tweet={tweet} />
+                      </div>
+                    </Link>
+                  </span>
                 ))
               ) : (
                 <div className="flex justify-center">
