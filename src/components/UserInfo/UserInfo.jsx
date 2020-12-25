@@ -58,7 +58,7 @@ const UserInfo = ({ fetchedUser }) => {
               Edit Profile
             </button>
           ) : (
-            <div className="mr-0 ml-auto">
+            <div className="mx-auto">
               <FollowButton userID={fetchedUser.uid} />
             </div>
           )}
