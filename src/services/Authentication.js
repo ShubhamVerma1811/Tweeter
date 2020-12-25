@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "../firebase/init";
 
 async function handleSignUp(email, password, username, name) {
   try {
@@ -13,6 +13,12 @@ async function handleSignUp(email, password, username, name) {
       name,
       bio: null,
     });
+
+    await firebase.firestore().collection("connections").add({
+      followerID: user.uid,
+      followeeID: user.uid,
+    });
+
     window.location.replace("/home");
     return user;
   } catch (error) {
@@ -27,7 +33,6 @@ async function handleSignIn(email, password) {
       .auth()
       .signInWithEmailAndPassword(email, password);
     window.location.replace("/home");
-    return user;
   } catch (error) {
     console.error(error);
     return error;
@@ -42,7 +47,7 @@ async function handleSignOut() {
   } catch (error) {
     console.error(error);
 
-    return false;
+    return error;
   }
 }
 export { handleSignIn, handleSignUp, handleSignOut };
