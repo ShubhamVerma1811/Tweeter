@@ -2,7 +2,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
-import firebase from "../../firebase/init";
 import Avatar from "../Avatar/Avatar";
 import FollowButton from "../FollowButton/FollowButton";
 
@@ -30,21 +29,6 @@ const Modal = ({ users, close, loading }) => {
       )}
       <hr />
       {users.map((localUser) => {
-        if (localUser) {
-          const result = firebase
-            .firestore()
-            .collection("connections")
-            .where("followeeID", "==", localUser.uid)
-            .where("followerID", "==", user.uid)
-            .get()
-            .then((res) => res);
-
-          if (result.size === 1) {
-            setIsFollowing(true);
-            setFollowingDocID(result.docs[0].id);
-          }
-        }
-
         return (
           <div className="py-4 ">
             <div className="flex flex-row items-center">
