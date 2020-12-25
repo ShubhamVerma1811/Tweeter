@@ -59,7 +59,7 @@ const Bookmarks = () => {
   return (
     <div>
       <Head>
-        <title>Explore | Tweeter</title>
+        <title>Bookmarks | Tweeter</title>
       </Head>
       <Layout>
         <div className="mx-4 sm:mx-12 md:mx-24 lg:mx-24 mt-5">
