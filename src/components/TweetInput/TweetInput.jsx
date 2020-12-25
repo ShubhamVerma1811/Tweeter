@@ -2,8 +2,8 @@ import PhotoIcon from "@material-ui/icons/Photo";
 import React, { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import firebase from "../../firebase/init";
+import postTweet from "../../services/PostTweet";
 import Avatar from "../Avatar/Avatar";
-import postTweet from "../../services/PostTweet"
 
 const TweetInput = () => {
   const { user } = useContext(UserContext);
@@ -17,7 +17,7 @@ const TweetInput = () => {
     const storageRef = firebase.storage().ref("tweets/" + file.name);
     const task = await storageRef.put(file);
     const link = await storageRef.getDownloadURL("tweets/" + file.name);
-    setImgLink(link);
+    return link;
   };
 
   return (
@@ -61,12 +61,13 @@ const TweetInput = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         async function postTweetandUploadFile() {
+                          let imgLink = null;
                           if (file) {
-                            await uploadFile();
+                            imgLink = await uploadFile();
                           }
                           postTweet(user.uid, tweet.trim(), imgLink);
                           setFile(null);
-                          setTweet(null);
+                          setTweet("");
                           setImgLink(null);
                         }
                         postTweetandUploadFile();
