@@ -1,6 +1,11 @@
 import firebase from "../firebase/init";
 
-const postTweet = async (authorId, text, imgLink, parentTweet = null) => {
+const postTweet = async (
+  authorId,
+  text,
+  imgLink = null,
+  parentTweet = null
+) => {
   console.log(authorId, text, imgLink, parentTweet);
   await firebase.firestore().collection("tweets").add({
     authorId,
