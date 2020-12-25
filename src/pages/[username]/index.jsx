@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../..//layouts/index";
 import Banner from "../../components/Banner/Banner";
 import Filters from "../../components/Filters/Filters";
@@ -46,12 +46,14 @@ const UserName = ({ fetchedUser, tweets }) => {
                 <div className="col-span-2">
                   {tweets.map((tweet) => {
                     return (
-                      <Link
-                        href={`${tweet.author.username}/status/${tweet.id}`}>
-                        <div className="mb-5" key={tweet.id}>
-                          <Post tweet={tweet} />
-                        </div>
-                      </Link>
+                      <span key={tweet.id}>
+                        <Link
+                          href={`${tweet.author.username}/status/${tweet.id}`}>
+                          <div className="mb-5">
+                            <Post tweet={tweet} />
+                          </div>
+                        </Link>
+                      </span>
                     );
                   })}
                 </div>
