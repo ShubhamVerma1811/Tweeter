@@ -1,3 +1,4 @@
+import CircularProgress from "@material-ui/core/CircularProgress";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -9,6 +10,7 @@ import Avatar from "../Avatar/Avatar";
 
 const ProfileDropDown = ({ user }) => {
   const [dropdown, setDropdown] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   return (
     <div>
       <div className="flex flex-row items-center mr-4">
@@ -64,21 +66,39 @@ const ProfileDropDown = ({ user }) => {
                 <hr />
                 <button
                   type="submit"
-                  className="block w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                  className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 focus:outline-none focus:bg-gray-100 ${
+                    deletingAccount
+                      ? "text-red-300 cursor-not-allowed"
+                      : "text-red-700"
+                  } `}
                   role="menuitem"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const answer = confirm(
-                      `Are you sure you want to delete your account?\nThis would delete your tweets,likes,saves`
-                    );
-                    if (answer) {
-                      deleteAccount(user.uid);
+                  onClick={async (e) => {
+                    if (!deletingAccount) {
+                      e.stopPropagation();
+                      const answer = confirm(
+                        `Are you sure you want to delete your account?\nThis would delete your tweets,likes,saves`
+                      );
+                      if (answer) {
+                        setDeletingAccount(true);
+                        await deleteAccount(user.uid);
+                      }
                     }
                   }}>
                   <span className="pr-4">
                     <DeleteIcon htmlColor="#c53030" />
                   </span>
-                  Delete Account
+                  {deletingAccount ? "  Deleting Account..." : "Delete Account"}
+                  {deletingAccount && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: " translate(-50%, -50%)",
+                      }}>
+                      <CircularProgress />
+                    </span>
+                  )}
                 </button>
                 <hr />
                 <button
