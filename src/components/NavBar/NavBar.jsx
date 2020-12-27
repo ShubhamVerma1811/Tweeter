@@ -56,16 +56,18 @@ const NavBar = () => {
         </div>
 
         <div className="bg-white w-full lg:hidden flex justify-between items-center fixed bottom-0 h-16 px-4">
-          <Link href="/home">
-            <span>
-              <HomeIcon
-                fontSize="large"
-                style={{
-                  color: router.route === "/home" ? "#2F80ED" : "#828282",
-                }}
-              />
-            </span>
-          </Link>
+          {user && (
+            <Link href="/home">
+              <span>
+                <HomeIcon
+                  fontSize="large"
+                  style={{
+                    color: router.route === "/home" ? "#2F80ED" : "#828282",
+                  }}
+                />
+              </span>
+            </Link>
+          )}
           <Link href="/explore">
             <span>
               <ExploreIcon
@@ -76,16 +78,19 @@ const NavBar = () => {
               />
             </span>
           </Link>
-          <Link href="/bookmarks">
-            <span>
-              <BookmarkIcon
-                fontSize="large"
-                style={{
-                  color: router.route === "/bookmarks" ? "#2F80ED" : "#828282",
-                }}
-              />
-            </span>
-          </Link>
+          {user && (
+            <Link href="/bookmarks">
+              <span>
+                <BookmarkIcon
+                  fontSize="large"
+                  style={{
+                    color:
+                      router.route === "/bookmarks" ? "#2F80ED" : "#828282",
+                  }}
+                />
+              </span>
+            </Link>
+          )}
         </div>
         <div>{user && <ProfileDropDown user={user} />}</div>
       </nav>
