@@ -56,41 +56,47 @@ const NavBar = () => {
         </div>
 
         <div className="bg-white w-full lg:hidden flex justify-between items-center fixed bottom-0 h-16 px-4">
-          {user && (
-            <Link href="/home">
+          <div>
+            {user && (
+              <Link href="/home">
+                <span>
+                  <HomeIcon
+                    fontSize="large"
+                    style={{
+                      color: router.route === "/home" ? "#2F80ED" : "#828282",
+                    }}
+                  />
+                </span>
+              </Link>
+            )}
+          </div>
+          <div>
+            <Link href="/explore">
               <span>
-                <HomeIcon
+                <ExploreIcon
                   fontSize="large"
                   style={{
-                    color: router.route === "/home" ? "#2F80ED" : "#828282",
+                    color: router.route === "/explore" ? "#2F80ED" : "#828282",
                   }}
                 />
               </span>
             </Link>
-          )}
-          <Link href="/explore">
-            <span>
-              <ExploreIcon
-                fontSize="large"
-                style={{
-                  color: router.route === "/explore" ? "#2F80ED" : "#828282",
-                }}
-              />
-            </span>
-          </Link>
-          {user && (
-            <Link href="/bookmarks">
-              <span>
-                <BookmarkIcon
-                  fontSize="large"
-                  style={{
-                    color:
-                      router.route === "/bookmarks" ? "#2F80ED" : "#828282",
-                  }}
-                />
-              </span>
-            </Link>
-          )}
+          </div>
+          <div>
+            {user && (
+              <Link href="/bookmarks">
+                <span>
+                  <BookmarkIcon
+                    fontSize="large"
+                    style={{
+                      color:
+                        router.route === "/bookmarks" ? "#2F80ED" : "#828282",
+                    }}
+                  />
+                </span>
+              </Link>
+            )}
+          </div>
         </div>
         <div>{user && <ProfileDropDown user={user} />}</div>
       </nav>
