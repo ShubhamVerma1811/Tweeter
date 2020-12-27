@@ -23,14 +23,16 @@ const NavBar = () => {
         </Link>
 
         <div className="hidden lg:block menu">
-          <Link href="/home">
-            <li
-              className={`list-none inline-block mx-20 cursor-pointer ${
-                router.route === "/home" ? "text-primary font-semibold" : ""
-              }`}>
-              Home
-            </li>
-          </Link>
+          {user && (
+            <Link href="/home">
+              <li
+                className={`list-none inline-block mx-20 cursor-pointer ${
+                  router.route === "/home" ? "text-primary font-semibold" : ""
+                }`}>
+                Home
+              </li>
+            </Link>
+          )}
           <Link href="/explore">
             <li
               className={`list-none inline-block mx-20 cursor-pointer ${
@@ -39,16 +41,18 @@ const NavBar = () => {
               Explore
             </li>
           </Link>
-          <Link href="/bookmarks">
-            <li
-              className={`list-none inline-block mx-20 cursor-pointer ${
-                router.route === "/bookmarks"
-                  ? "text-primary font-semibold"
-                  : ""
-              }`}>
-              Bookmarks
-            </li>
-          </Link>
+          {user && (
+            <Link href="/bookmarks">
+              <li
+                className={`list-none inline-block mx-20 cursor-pointer ${
+                  router.route === "/bookmarks"
+                    ? "text-primary font-semibold"
+                    : ""
+                }`}>
+                Bookmarks
+              </li>
+            </Link>
+          )}
         </div>
 
         <div className="bg-white w-full lg:hidden flex justify-between items-center fixed bottom-0 h-16 px-4">
@@ -83,8 +87,7 @@ const NavBar = () => {
             </span>
           </Link>
         </div>
-
-        <ProfileDropDown user={user} />
+        <div>{user && <ProfileDropDown user={user} />}</div>
       </nav>
     </div>
   );
