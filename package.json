@@ -19,7 +19,8 @@
     "firebase": "^8.1.1",
     "next": "10.0.2",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

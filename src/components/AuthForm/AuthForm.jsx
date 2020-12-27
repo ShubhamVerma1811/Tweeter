@@ -1,6 +1,7 @@
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Link from "next/link";
 import { useState } from "react";
+import shortID from "shortid";
 import { handleSignIn, handleSignUp } from "../../services/Authentication";
 
 const AuthForm = ({ type }) => {
@@ -211,7 +212,7 @@ const AuthForm = ({ type }) => {
                 const { message } = await handleSignUp(
                   email,
                   password,
-                  username,
+                  username + shortID.generate(),
                   name
                 );
                 setAuthErrMsg(message);
