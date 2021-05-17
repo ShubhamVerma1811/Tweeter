@@ -71,6 +71,7 @@ const TweetInput = () => {
                         style={{ color: "#3182ce" }}
                       />
                     </span>
+                      {file && file.name}
                   </div>
                   <div className="mr-0 ml-auto">
                     <button
